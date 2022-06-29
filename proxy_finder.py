@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from colorama import Fore
 
 class ProxyFinder():
     def __init__(self, url) -> None:
@@ -31,20 +32,18 @@ class ProxyFinder():
             try:
                 response = requests.get(self.check_url, proxies=checked_proxy)
             except Exception as e:
-                print(f"{proxy} - BAD! (Error)")
-                #proxy_list.remove(proxy)
+                print(Fore.RED + f"{proxy} - BAD! (Error)")
                 continue
 
             if response.status_code == 200:
-                print(f"{proxy} - GOOD!")
+                print(Fore.GREEN + f"{proxy} - GOOD!")
                 return checked_proxy
 
-            print(f"{proxy} - BAD! (status_code = {response.status_code})")
-            #proxy_list.remove(proxy)
+            print(Fore.RED + f"{proxy} - BAD! (status_code = {response.status_code})")
 
 
 def main():
-    proxyFinder = ProxyFinder("https://hoz-house.ru/populyarnye/page/1/")
+    proxyFinder = ProxyFinder("www.example.com")
     proxy_list = proxyFinder.getProxyList()
     worked_proxy = proxyFinder.findWorkedProxy(proxy_list=proxy_list)
     print(worked_proxy)
