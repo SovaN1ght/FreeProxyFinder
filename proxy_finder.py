@@ -1,9 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 from colorama import Fore
+from art import tprint
 
 class ProxyFinder():
-    def __init__(self, url) -> None:
+    def __init__(self, url="www.example.com") -> None:
         self.check_url = url
 
     _proxies_url = "https://free-proxy-list.net/"
@@ -32,21 +33,28 @@ class ProxyFinder():
             try:
                 response = requests.get(self.check_url, proxies=checked_proxy)
             except Exception as e:
-                print(Fore.RED + f"{proxy} - BAD! (Error)")
+                print(Fore.RED + f"{proxy} - BAD!")
                 continue
 
             if response.status_code == 200:
-                print(Fore.GREEN + f"{proxy} - GOOD!")
                 return checked_proxy
 
-            print(Fore.RED + f"{proxy} - BAD! (status_code = {response.status_code})")
+            print(Fore.RED + f"{proxy} - BAD!")
 
 
 def main():
-    proxyFinder = ProxyFinder("www.example.com")
+    tprint("Proxy Finder", font="bulbhead")
+    main_url = input("Enter the URL here --> ")
+    proxyFinder = ProxyFinder(main_url)
+    print(Fore.BLUE + "Getting actual proxy list...")
     proxy_list = proxyFinder.getProxyList()
+    print(Fore.GREEN + "Successful!")
+    print(Fore.BLUE + "Trying to find worked proxy...")
     worked_proxy = proxyFinder.findWorkedProxy(proxy_list=proxy_list)
-    print(worked_proxy)
+    print(Fore.GREEN + "Worked proxy finded!")
+    print()
+    print(Fore.GREEN + worked_proxy["https"])
+    print()
 
 
 if __name__ == "__main__":
